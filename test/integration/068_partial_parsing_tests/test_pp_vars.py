@@ -1,4 +1,4 @@
-from dbt.exceptions import CompilationException, UndefinedMacroException
+from dbt.exceptions import CompilationException, ParsingException
 from dbt.contracts.graph.manifest import Manifest
 from dbt.contracts.files import ParseFileType
 from dbt.contracts.results import TestStatus
@@ -28,11 +28,6 @@ class BasePPTest(DBTIntegrationTest):
             'data-paths': ['seeds'],
             'test-paths': ['tests'],
             'macro-paths': ['macros'],
-            'analysis-paths': ['analyses'],
-            'snapshot-paths': ['snapshots'],
-            'seeds': {
-                'quote_columns': False,
-            },
         }
 
     def setup_directories(self):
@@ -41,10 +36,7 @@ class BasePPTest(DBTIntegrationTest):
         # delete files in this directory without tests interfering with each other.
         os.mkdir(os.path.join(self.test_root_dir, 'models'))
         os.mkdir(os.path.join(self.test_root_dir, 'tests'))
-        os.mkdir(os.path.join(self.test_root_dir, 'seeds'))
         os.mkdir(os.path.join(self.test_root_dir, 'macros'))
-        os.mkdir(os.path.join(self.test_root_dir, 'analyses'))
-        os.mkdir(os.path.join(self.test_root_dir, 'snapshots'))
 
 
 
@@ -61,7 +53,7 @@ class EnvVarTest(BasePPTest):
 
         # copy a file with an env_var call without an env_var
         self.copy_file('test-files/env_var_model.sql', 'models/env_var_model.sql')
-        with self.assertRaises(UndefinedMacroException):
+        with self.assertRaises(ParsingException):
             results = self.run_dbt(["--partial-parse", "run"])
 
         # set the env var
@@ -83,6 +75,19 @@ class EnvVarTest(BasePPTest):
         expected_env_vars = {"ENV_VAR_TEST": "second"}
         self.assertEqual(expected_env_vars, manifest.env_vars)
         self.assertNotEqual(model_created_at, manifest.nodes[model_id].created_at)
+
+        # set an env_var in a schema file
+        self.copy_file('test-files/env_var_schema.yml', 'models/schema.yml')
+        with self.assertRaises(ParsingException):
+            results = self.run_dbt(["--partial-parse", "run"])
+
+        # actually set the env_var
+        os.environ['TEST_SCHEMA_VAR'] = 'view'
+        results = self.run_dbt(["--partial-parse", "run"])
+        manifest = get_manifest()
+        expected_env_vars = {"ENV_VAR_TEST": "second", "TEST_SCHEMA_VAR": "view"}
+        self.assertEqual(expected_env_vars, manifest.env_vars)
+
 
         # delete the env var to cleanup
         del os.environ['ENV_VAR_TEST']
