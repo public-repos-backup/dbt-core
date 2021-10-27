@@ -36,6 +36,10 @@ class ErrorLevel():
 # destinations they are intended for, which mypy uses to enforce
 # that the necessary methods are defined.
 
+# Hierarchy for log levels. Applies to all events, not just events
+# where the destination is a log file.
+Level = Union[TestLevel, DebugLevel, InfoLevel, WarnLevel, ErrorLevel]
+
 
 # top-level superclass for all events
 class Event(metaclass=ABCMeta):
