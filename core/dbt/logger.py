@@ -654,6 +654,7 @@ def list_handler(
 def get_timestamp():
     return time.strftime("%H:%M:%S")
 
+
 def timestamped_line(msg: str) -> str:
     return "{} | {}".format(get_timestamp(), msg)
 
