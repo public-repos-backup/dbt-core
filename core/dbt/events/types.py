@@ -128,6 +128,14 @@ class GitProgressUpdatingExistingDependency(DebugLevel, CliEventABC):
     def cli_msg(self) -> str:
         return f"Updating existing dependency {self.dir}."
 
+    
+@dataclass
+class GitProgressPullingNewDependency(DebugLevel, CliEventABC):
+    dir: str
+
+    def cli_msg(self) -> str:
+        return f"Pulling new dependency {self.dir}."
+
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
 # making the conditional `if False` causes mypy to skip it as dead code so
@@ -145,5 +153,7 @@ if 1 == 0:
     ManifestChecked()
     ManifestFlatGraphBuilt()
     ReportPerformancePath(path='')
-    SparseCheckoutSubdirectory(subdir='')
-    CheckoutRevision(revision='')
+    GitSparseCheckoutSubdirectory(subdir='')
+    GitProgressCheckoutRevision(revision='')
+    GitProgressUpdatingExistingDependency(dir='')
+    GitProgressPullingNewDependency(dir='')
