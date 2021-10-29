@@ -136,6 +136,14 @@ class GitProgressPullingNewDependency(DebugLevel, CliEventABC):
     def cli_msg(self) -> str:
         return f"Pulling new dependency {self.dir}."
 
+
+@dataclass
+class GitNothingToDo(DebugLevel, CliEventABC):
+    sha: str
+
+    def cli_msg(self) -> str:
+        return f"Already at {self.sha}, nothing to do."
+
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
 # making the conditional `if False` causes mypy to skip it as dead code so
@@ -157,3 +165,4 @@ if 1 == 0:
     GitProgressCheckoutRevision(revision='')
     GitProgressUpdatingExistingDependency(dir='')
     GitProgressPullingNewDependency(dir='')
+    GitNothingToDo(sha='')

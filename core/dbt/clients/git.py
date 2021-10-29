@@ -5,7 +5,8 @@ from dbt.clients.system import run_cmd, rmdir
 from dbt.events.functions import fire_event
 from dbt.events import (
     GitSparseCheckoutSubdirectory, GitProgressCheckoutRevision,
-    GitProgressUpdatingExistingDependency, GitProgressPullingNewDependency
+    GitProgressUpdatingExistingDependency, GitProgressPullingNewDependency,
+    GitNothingToDo
 )
 from dbt.logger import GLOBAL_LOGGER as logger
 import dbt.exceptions
@@ -138,7 +139,7 @@ def clone_and_checkout(repo, cwd, dirname=None, remove_git_dir=False,
     end_sha = get_current_sha(full_path)
     if exists:
         if start_sha == end_sha:
-            logger.debug('  Already at {}, nothing to do.', start_sha[:7])
+            fire_event(GitNothingToDo(sha=start_sha[:7]))
         else:
             logger.debug('  Updated checkout from {} to {}.',
                          start_sha[:7], end_sha[:7])
