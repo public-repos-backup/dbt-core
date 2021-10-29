@@ -197,8 +197,9 @@ class SystemCouldNotWrite(DebugLevel, CliEventABC):
     def cli_msg(self) -> str:
         return (
             f"Could not write to path {self.path}({len(self.path)} characters): "
-            f"{reason}\nexception: {exc}"
+            f"{self.reason}\nexception: {self.exc}"
         )
+
 
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
