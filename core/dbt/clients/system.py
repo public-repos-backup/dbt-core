@@ -17,7 +17,7 @@ from typing import (
 
 from dbt.events.functions import fire_event
 from dbt.events.types import (
-    SystemErrorRetrievingModTime
+    SystemErrorRetrievingModTime, SystemCouldNotWrite
 )
 import dbt.exceptions
 from dbt.logger import GLOBAL_LOGGER as logger
@@ -163,10 +163,7 @@ def write_file(path: str, contents: str = '') -> bool:
                 reason = 'Path was possibly too long'
             # all our hard work and the path was still too long. Log and
             # continue.
-            logger.debug(
-                f'Could not write to path {path}({len(path)} characters): '
-                f'{reason}\nexception: {exc}'
-            )
+            fire_event(SystemCouldNotWrite(path=path, reason=reason, exc=exc))
         else:
             raise
     return True

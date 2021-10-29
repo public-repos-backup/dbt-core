@@ -188,6 +188,18 @@ class SystemErrorRetrievingModTime(ErrorLevel, CliEventABC):
         return f"Error retrieving modification time for file {self.path}"
 
 
+@dataclass
+class SystemCouldNotWrite(DebugLevel, CliEventABC):
+    path: str
+    reason: str
+    exc: Exception
+
+    def cli_msg(self) -> str:
+        return (
+            f"Could not write to path {self.path}({len(self.path)} characters): "
+            f"{reason}\nexception: {exc}"
+        )
+
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
 # making the conditional `if False` causes mypy to skip it as dead code so
@@ -213,3 +225,4 @@ if 1 == 0:
     GitProgressUpdatedCheckoutRange(start_sha='', end_sha='')
     GitProgressCheckedOutAt(end_sha='')
     SystemErrorRetrievingModTime(path='')
+    SystemCouldNotWrite(path='', reason='', exc=Exception(''))
