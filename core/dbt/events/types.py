@@ -121,6 +121,13 @@ class CheckoutRevision(DebugLevel, CliEventABC):
         return f"  Checking out revision {self.revision}."
 
 
+@dataclass
+class GitStatusUpdatingExistingDependency(DebugLevel, CliEventABC):
+    dir: str
+
+    def cli_msg(self) -> str:
+        return f"Updating existing dependency {self.dir}."
+
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
 # making the conditional `if False` causes mypy to skip it as dead code so

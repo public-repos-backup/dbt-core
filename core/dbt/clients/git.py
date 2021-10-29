@@ -3,7 +3,7 @@ import os.path
 
 from dbt.clients.system import run_cmd, rmdir
 from dbt.events.functions import fire_event
-from dbt.events import SparseCheckoutSubdirectory, CheckoutRevision
+from dbt.events import SparseCheckoutSubdirectory, CheckoutRevision, GitStatusUpdatingExistingDependency
 from dbt.logger import GLOBAL_LOGGER as logger
 import dbt.exceptions
 from packaging import version
@@ -121,6 +121,7 @@ def clone_and_checkout(repo, cwd, dirname=None, remove_git_dir=False,
     if exists:
         directory = exists.group(1)
         logger.debug('Updating existing dependency {}.', directory)
+        fire_event(GitStatusUpdatingExistingDependency(dir=directory))
     else:
         matches = re.match("Cloning into '(.+)'", err.decode('utf-8'))
         if matches is None:
