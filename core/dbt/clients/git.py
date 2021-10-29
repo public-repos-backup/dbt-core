@@ -18,7 +18,7 @@ def clone(repo, cwd, dirname=None, remove_git_dir=False, revision=None, subdirec
 
     clone_cmd = ['git', 'clone', '--depth', '1']
     if subdirectory:
-        logger.debug('  Subdirectory specified: {}, using sparse checkout.'.format(subdirectory))
+        fire_event(SparseCheckoutSubdirectory(subdir=subdirectory))
         out, _ = run_cmd(cwd, ['git', '--version'], env={'LC_ALL': 'C'})
         git_version = version.parse(re.search(r"\d+\.\d+\.\d+", out.decode("utf-8")).group(0))
         if not git_version >= version.parse("2.25.0"):

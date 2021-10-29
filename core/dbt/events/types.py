@@ -105,6 +105,13 @@ class ReportPerformancePath(InfoLevel, CliEventABC):
         return f"Performance info: {self.path}"
 
 
+@dataclass
+class SparseCheckoutSubdirectory(DebugLevel, CliEventABC):
+    subdir: str
+
+    def cli_msg(self) -> str:
+        return f"  Subdirectory specified: {self.subdir}, using sparse checkout."
+
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
 # making the conditional `if False` causes mypy to skip it as dead code so
@@ -122,3 +129,4 @@ if 1 == 0:
     ManifestChecked()
     ManifestFlatGraphBuilt()
     ReportPerformancePath(path='')
+    SparseCheckoutSubdirectory(subdir='')
