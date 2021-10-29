@@ -3,12 +3,11 @@ import os.path
 
 from dbt.clients.system import run_cmd, rmdir
 from dbt.events.functions import fire_event
-from dbt.events import (
+from dbt.events.types import (
     GitSparseCheckoutSubdirectory, GitProgressCheckoutRevision,
     GitProgressUpdatingExistingDependency, GitProgressPullingNewDependency,
     GitNothingToDo, GitProgressUpdatedCheckoutRange, GitProgressCheckedOutAt
 )
-from dbt.logger import GLOBAL_LOGGER as logger
 import dbt.exceptions
 from packaging import version
 
@@ -141,7 +140,9 @@ def clone_and_checkout(repo, cwd, dirname=None, remove_git_dir=False,
         if start_sha == end_sha:
             fire_event(GitNothingToDo(sha=start_sha[:7]))
         else:
-            fire_event(GitProgressUpdatedCheckoutRange(start_sha=start_sha[:7], end_sha=end_sha[:7]))
+            fire_event(GitProgressUpdatedCheckoutRange(
+                start_sha=start_sha[:7], end_sha=end_sha[:7]
+            ))
     else:
         fire_event(GitProgressCheckedOutAt(end_sha=end_sha[:7]))
     return os.path.join(directory, subdirectory or '')

@@ -128,7 +128,7 @@ class GitProgressUpdatingExistingDependency(DebugLevel, CliEventABC):
     def cli_msg(self) -> str:
         return f"Updating existing dependency {self.dir}."
 
-    
+
 @dataclass
 class GitProgressPullingNewDependency(DebugLevel, CliEventABC):
     dir: str
@@ -146,13 +146,13 @@ class GitNothingToDo(DebugLevel, CliEventABC):
 
 
 @dataclass
-class GitUpdatedCheckoutRange(DebugLevel, CliEventABC):
+class GitProgressUpdatedCheckoutRange(DebugLevel, CliEventABC):
     start_sha: str
     end_sha: str
 
     def cli_msg(self) -> str:
         return f"  Updated checkout from {self.start_sha} to {self.end_sha}."
-        
+
 
 @dataclass
 class GitProgressCheckedOutAt(DebugLevel, CliEventABC):
@@ -160,7 +160,7 @@ class GitProgressCheckedOutAt(DebugLevel, CliEventABC):
 
     def cli_msg(self) -> str:
         return f"  Checked out at {self.end_sha}."
-        
+
 
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
@@ -184,5 +184,5 @@ if 1 == 0:
     GitProgressUpdatingExistingDependency(dir='')
     GitProgressPullingNewDependency(dir='')
     GitNothingToDo(sha='')
-    GitUpdatedCheckoutRange(start_sha='', end_sha='')
+    GitProgressUpdatedCheckoutRange(start_sha='', end_sha='')
     GitProgressCheckedOutAt(end_sha='')
