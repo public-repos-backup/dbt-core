@@ -141,8 +141,7 @@ def clone_and_checkout(repo, cwd, dirname=None, remove_git_dir=False,
         if start_sha == end_sha:
             fire_event(GitNothingToDo(sha=start_sha[:7]))
         else:
-            logger.debug('  Updated checkout from {} to {}.',
-                         start_sha[:7], end_sha[:7])
+            fire_event(GitUpdatedCheckoutRange(start_sha=start_sha[:7], end_sha=end_sha[:7]))
     else:
         logger.debug('  Checked out at {}.', end_sha[:7])
     return os.path.join(directory, subdirectory or '')
