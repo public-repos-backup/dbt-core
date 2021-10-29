@@ -2,6 +2,8 @@ import re
 import os.path
 
 from dbt.clients.system import run_cmd, rmdir
+from dbt.events.functions import fire_event
+from dbt.events import SparseCheckoutSubdirectory, CheckoutRevision
 from dbt.logger import GLOBAL_LOGGER as logger
 import dbt.exceptions
 from packaging import version
@@ -54,7 +56,7 @@ def list_tags(cwd):
 
 
 def _checkout(cwd, repo, revision):
-    logger.debug('  Checking out revision {}.'.format(revision))
+    fire_event(CheckoutRevision(revision=revision))
 
     fetch_cmd = ["git", "fetch", "origin", "--depth", "1"]
 
