@@ -19,7 +19,7 @@ def fire_event(e: Event) -> None:
         elif e.level_tag() == 'info':
             logger.GLOBAL_LOGGER.info(logger.timestamped_line(e.cli_msg()))
         elif e.level_tag() == 'warn':
-            logger.GLOBAL_LOGGER.warning()(logger.timestamped_line(e.cli_msg()))
+            logger.GLOBAL_LOGGER.warning(logger.timestamped_line(e.cli_msg()))
         elif e.level_tag() == 'error':
             logger.GLOBAL_LOGGER.error(logger.timestamped_line(e.cli_msg()))
         else:
