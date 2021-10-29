@@ -162,6 +162,23 @@ class GitProgressCheckedOutAt(DebugLevel, CliEventABC):
         return f"  Checked out at {self.end_sha}."
 
 
+@dataclass
+class RegistryProgressMakingGETRequest(DebugLevel, CliEventABC):
+    url: str
+
+    def cli_msg(self) -> str:
+        return f"Making package registry request: GET {self.url}"
+
+
+@dataclass
+class RegistryProgressGETResponse(DebugLevel, CliEventABC):
+    url: str
+    resp_code: int
+
+    def cli_msg(self) -> str:
+        return f"Response from registry: GET {self.url} {self.resp_code}"
+
+
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
 # making the conditional `if False` causes mypy to skip it as dead code so
