@@ -154,6 +154,14 @@ class GitUpdatedCheckoutRange(DebugLevel, CliEventABC):
         return f"  Updated checkout from {self.start_sha} to {self.end_sha}."
         
 
+@dataclass
+class GitProgressCheckedOutAt(DebugLevel, CliEventABC):
+    end_sha: str
+
+    def cli_msg(self) -> str:
+        return f"  Checked out at {self.end_sha}."
+        
+
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
 # making the conditional `if False` causes mypy to skip it as dead code so
@@ -177,3 +185,4 @@ if 1 == 0:
     GitProgressPullingNewDependency(dir='')
     GitNothingToDo(sha='')
     GitUpdatedCheckoutRange(start_sha='', end_sha='')
+    GitProgressCheckedOutAt(end_sha='')
