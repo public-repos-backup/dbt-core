@@ -15,6 +15,10 @@ from typing import (
     Type, NoReturn, List, Optional, Dict, Any, Tuple, Callable, Union
 )
 
+from dbt.events.functions import fire_event
+from dbt.events.types import (
+    SystemErrorRetrievingModTime
+)
 import dbt.exceptions
 from dbt.logger import GLOBAL_LOGGER as logger
 from dbt.utils import _connection_exception_retry as connection_exception_retry
@@ -65,9 +69,7 @@ def find_matching(
                 try:
                     modification_time = os.path.getmtime(absolute_path)
                 except OSError:
-                    logger.exception(
-                        f"Error retrieving modification time for file {absolute_path}"
-                    )
+                    fire_event(SystemErrorRetrievingModTime(path=absolute_path))
                 if reobj.match(local_file):
                     matching.append({
                         'searched_path': relative_path_to_search,

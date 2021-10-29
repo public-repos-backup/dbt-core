@@ -179,6 +179,15 @@ class RegistryProgressGETResponse(DebugLevel, CliEventABC):
         return f"Response from registry: GET {self.url} {self.resp_code}"
 
 
+# TODO this was actually `logger.exception(...)` not `logger.error(...)`
+@dataclass
+class SystemErrorRetrievingModTime(ErrorLevel, CliEventABC):
+    path: str
+
+    def cli_msg(self) -> str:
+        return f"Error retrieving modification time for file {self.path}"
+
+
 # since mypy doesn't run on every file we need to suggest to mypy that every
 # class gets instantiated. But we don't actually want to run this code.
 # making the conditional `if False` causes mypy to skip it as dead code so
@@ -203,3 +212,4 @@ if 1 == 0:
     GitNothingToDo(sha='')
     GitProgressUpdatedCheckoutRange(start_sha='', end_sha='')
     GitProgressCheckedOutAt(end_sha='')
+    SystemErrorRetrievingModTime(path='')
