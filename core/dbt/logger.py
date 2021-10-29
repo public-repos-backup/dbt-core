@@ -658,9 +658,6 @@ def get_timestamp():
 def timestamped_line(msg: str) -> str:
     return "{} | {}".format(get_timestamp(), msg)
 
-def timestamped_line(msg: str) -> str:
-    return "{} | {}".format(get_timestamp(), msg)
-
 
 def print_timestamped_line(msg: str, use_color: Optional[str] = None):
     if use_color is not None:
