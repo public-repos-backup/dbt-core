@@ -106,7 +106,7 @@ class ReportPerformancePath(InfoLevel, CliEventABC):
 
 
 @dataclass
-class SparseCheckoutSubdirectory(DebugLevel, CliEventABC):
+class GitSparseCheckoutSubdirectory(DebugLevel, CliEventABC):
     subdir: str
 
     def cli_msg(self) -> str:
@@ -114,7 +114,7 @@ class SparseCheckoutSubdirectory(DebugLevel, CliEventABC):
 
 
 @dataclass
-class CheckoutRevision(DebugLevel, CliEventABC):
+class GitProgressCheckoutRevision(DebugLevel, CliEventABC):
     revision: str
 
     def cli_msg(self) -> str:
@@ -122,7 +122,7 @@ class CheckoutRevision(DebugLevel, CliEventABC):
 
 
 @dataclass
-class GitStatusUpdatingExistingDependency(DebugLevel, CliEventABC):
+class GitProgressUpdatingExistingDependency(DebugLevel, CliEventABC):
     dir: str
 
     def cli_msg(self) -> str:

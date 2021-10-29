@@ -3,7 +3,7 @@ import os.path
 
 from dbt.clients.system import run_cmd, rmdir
 from dbt.events.functions import fire_event
-from dbt.events import SparseCheckoutSubdirectory, CheckoutRevision, GitStatusUpdatingExistingDependency
+from dbt.events import GitSparseCheckoutSubdirectory, GitProgressCheckoutRevision, GitProgressUpdatingExistingDependency
 from dbt.logger import GLOBAL_LOGGER as logger
 import dbt.exceptions
 from packaging import version
@@ -20,7 +20,7 @@ def clone(repo, cwd, dirname=None, remove_git_dir=False, revision=None, subdirec
 
     clone_cmd = ['git', 'clone', '--depth', '1']
     if subdirectory:
-        fire_event(SparseCheckoutSubdirectory(subdir=subdirectory))
+        fire_event(GitSparseCheckoutSubdirectory(subdir=subdirectory))
         out, _ = run_cmd(cwd, ['git', '--version'], env={'LC_ALL': 'C'})
         git_version = version.parse(re.search(r"\d+\.\d+\.\d+", out.decode("utf-8")).group(0))
         if not git_version >= version.parse("2.25.0"):
@@ -56,7 +56,7 @@ def list_tags(cwd):
 
 
 def _checkout(cwd, repo, revision):
-    fire_event(CheckoutRevision(revision=revision))
+    fire_event(GitProgressCheckoutRevision(revision=revision))
 
     fetch_cmd = ["git", "fetch", "origin", "--depth", "1"]
 
@@ -121,7 +121,7 @@ def clone_and_checkout(repo, cwd, dirname=None, remove_git_dir=False,
     if exists:
         directory = exists.group(1)
         logger.debug('Updating existing dependency {}.', directory)
-        fire_event(GitStatusUpdatingExistingDependency(dir=directory))
+        fire_event(GitProgressUpdatingExistingDependency(dir=directory))
     else:
         matches = re.match("Cloning into '(.+)'", err.decode('utf-8'))
         if matches is None:
